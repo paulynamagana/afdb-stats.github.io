@@ -13,13 +13,6 @@
     <div id="nav-container"></div> <!-- Placeholder for nav -->
 
 
-    <script>
-        // Load the navigation menu
-        fetch('./templates/nav.html')
-            .then(response => response.text())
-            .then(data => document.getElementById('nav-container').innerHTML = data);
-    </script>
-
     <main>
         <h1>PLDDT Distribution by Organism</h1>
         <div id="charts-container" class="charts-container">
@@ -28,6 +21,15 @@
         
     </main>
 
-    <script src="scripts/plotPlddt.js"></script> <!-- Script for CSV parsing and plotting -->
+    <script>
+        // Load the navigation menu
+        fetch('./templates/nav.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('nav-container').innerHTML = data);
+    </script>
+
+
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <script src="scripts/plotPlddt.js"></script> <!-- Script for CSV parsing and plotting -->
 </body>
 </html>
