@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>PLDDT Mean Levels</title>
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/nav.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+
     <div id="nav-container"></div> <!-- Placeholder for nav -->
 
 
@@ -18,12 +19,14 @@
             .then(data => document.getElementById('nav-container').innerHTML = data);
     </script>
 
+    <main>
+        <h1>PLDDT Distribution by Organism</h1>
+        <div id="charts-container" class="charts-container">
+            <canvas id="plddtChart"></canvas>
+        </div>
+        
+    </main>
 
-
-<main>
-    <h1>Welcome to the Stats Homepage</h1>
-    <p>This is your central hub for data and visualizations. Use the navigation menu to explore more.</p>
-</main>
-
+    <script src="scripts/plotPlddt.js"></script> <!-- Script for CSV parsing and plotting -->
 </body>
 </html>

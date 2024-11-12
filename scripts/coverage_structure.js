@@ -1,7 +1,9 @@
-// Fetch UniProt data and generate the chart for multiple proteomes
+// Fetch UniProt data and generate a chart for multiple proteomes
 async function fetchData(proteomeIds) {
   const container = document.getElementById('charts-container');
-  container.innerHTML = ''; // Clear the previous charts
+  container.innerHTML = ''; // Clear previous charts
+
+  const proteomeData = [];
 
   for (const proteomeId of proteomeIds) {
     const url = `https://rest.uniprot.org/uniprotkb/stream?fields=accession%2Creviewed%2Cid%2Cprotein_name%2Cgene_names%2Corganism_name%2Clength%2Corganism_id%2Cxref_proteomes%2Cxref_pdb_full%2Cxref_alphafolddb%2Clineage_ids%2Cdate_sequence_modified&format=tsv&query=%28proteome:${proteomeId}%29`;
@@ -11,25 +13,20 @@ async function fetchData(proteomeIds) {
       const response = await fetch(url);
       const data = await response.text();
 
-      // Process the TSV data
+      // Process the TSV data and store results
       const counts = processData(data);
+      proteomeData.push(counts);
 
-      // Create chart container
-      const chartContainer = document.createElement('div');
-      chartContainer.classList.add('chart-container');  // Add class for styling
-
-      // Create the chart with processed data
-      createChart(counts, chartContainer);
-
-      // Append chart container to the main container
-      container.appendChild(chartContainer);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }
+
+  // After collecting all proteome data, create a single chart
+  createChart(proteomeData, container);
 }
 
-// Process the fetched TSV data (same function as before)
+// Process the fetched TSV data
 function processData(tsvData) {
   const lines = tsvData.split('\n');
   let totalSequences = 0;
@@ -69,69 +66,79 @@ function processData(tsvData) {
     "Entries": totalSequences,
     "AFDB Structures": alphafoldCount,
     "PDB Structures": pdbCount,
-    "AFDB Percentage": alphafoldPercentage,
-    "PDB Percentage": pdbPercentage
   };
 }
 
-// Create a chart using Chart.js
-function createChart(counts, chartContainer) {
+// Create a grouped bar chart using Chart.js
+function createChart(proteomeData, container) {
   const canvas = document.createElement('canvas');
-  chartContainer.appendChild(canvas);
+  container.appendChild(canvas);
 
   const ctx = canvas.getContext('2d');
-  
+
+  // Prepare data for the chart
+  const labels = proteomeData.map(item => item.Organism);
+  const entriesData = proteomeData.map(item => item.Entries);
+  const afdbData = proteomeData.map(item => item['AFDB Structures']);
+  const pdbData = proteomeData.map(item => item['PDB Structures']);
+
   const data = {
-    labels: ['Entries', 'AFDB Structures', 'PDB Structures'],
-    datasets: [{
-      data: [counts['Entries'], counts['AFDB Structures'], counts['PDB Structures']],
-      backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
-      borderColor: ['#4e73df', '#1cc88a', '#36b9cc'],
-      borderWidth: 1,
-      //barPercentage: 1, //if I change this to 10 it becomes a single stacked bar
-      //categoryPercentage: 1.0
-    }]
+    labels: labels,
+    datasets: [
+      {
+        label: 'Total unique accessions',
+        data: entriesData,
+        backgroundColor: '#BDB8AD'
+      },
+      {
+        label: 'AFDB Structures',
+        data: afdbData,
+        backgroundColor: '#44749D'
+      },
+      {
+        label: 'PDB Structures',
+        data: pdbData,
+        backgroundColor: '#C6D4E1'
+      }
+    ]
   };
 
   const options = {
     responsive: true,
+    indexAxis: 'y',  // Set horizontal orientation
     scales: {
-      y: {
+      x: {
         beginAtZero: true,
-        title:{
+        title: {
           display: true,
-          text: '# of unique entries'}
+          text: '# of Unique Entries'
+        }
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Organism'
+        }
       }
     },
     plugins: {
       title: {
         display: true,
-        text: counts['Organism'] + ' Proteome Coverage', // Set the title dynamically
+        text: 'Proteome Coverage by Organism'
       },
       tooltip: {
         callbacks: {
           label: function(tooltipItem) {
-            const label = tooltipItem.label;
+            const datasetLabel = tooltipItem.dataset.label || '';
             const value = tooltipItem.raw;
-            let percentage = 0;
-
-            if (label === 'AFDB Structures') {
-              percentage = counts['AFDB Percentage'];
-            } else if (label === 'PDB Structures') {
-              percentage = counts['PDB Percentage'];
-            }
-
-            if (!label || label === 'undefined') {
-              return `${value}`;
-            }
-
-            return `${label}: ${value} (${percentage.toFixed(2)}%)`;
+            return `${datasetLabel}: ${value}`;
           }
         }
       }
     }
   };
 
+  // Create the grouped bar chart
   new Chart(ctx, {
     type: 'bar',
     data: data,
@@ -146,10 +153,10 @@ fetchData([
   "UP000000429", 
   "UP000000579",
   "UP000000799",
-  "UP000000429",
   "UP000008153",
-  "UP000000806",
   "UP000000535",
   "UP000006548",
-  "UP000005640"
+  "UP000005640",
+  "UP000001940"
 ]);
+

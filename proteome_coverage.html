@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Proteome Coverage</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/nav.css">
 </head>
 <body>
+
     <div id="nav-container"></div> <!-- Placeholder for nav -->
 
+    <main>
+        <div id="loading"></div>
+        <div id="charts-container" class="charts-container"></div>
+    </main>
 
     <script>
         // Load the navigation menu
@@ -18,12 +23,8 @@
             .then(data => document.getElementById('nav-container').innerHTML = data);
     </script>
 
-
-
-<main>
-    <h1>Welcome to the Stats Homepage</h1>
-    <p>This is your central hub for data and visualizations. Use the navigation menu to explore more.</p>
-</main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts/coverage_structure.js"></script>
 
 </body>
 </html>

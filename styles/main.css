@@ -1,9 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 /* Style the charts container */
 .charts-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns */
-  gap: 20px; /* Space between columns */
   /*max-height: 80vh; /* Set the maximum height */
   overflow-y: auto; /* Enable vertical scrolling */
   margin: 0 auto; /* Center the container */
@@ -24,3 +22,4 @@
   width: 20%;
   height: auto;
 }
+
