@@ -28,7 +28,7 @@ async function loadCSV(file) {
 
 // Function to plot the data
 async function plotData() {
-    const { organisms, plddtData } = await loadCSV('../src/proteome_plddt.csv');
+    const { organisms, plddtData } = await loadCSV('src/proteome_plddt.csv');
     
     const ctx = document.getElementById('plddtChart').getContext('2d');
     new Chart(ctx, {
