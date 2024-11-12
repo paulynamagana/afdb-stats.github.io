@@ -1,0 +1,26 @@
+
+/* Style the charts container */
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  gap: 20px; /* Space between columns */
+  /*max-height: 80vh; /* Set the maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin: 0 auto; /* Center the container */
+  padding: 20px; /* Padding inside the container */
+  height: 20%;
+}
+
+/* Style for each chart container */
+.chart-container {
+  border: 1px solid #ddd;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+/* Make sure canvas inside chart-container fits */
+.chart-container canvas {
+  width: 20%;
+  height: auto;
+}
